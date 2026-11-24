@@ -15,6 +15,7 @@ import { TopicCard } from '../components/TopicCard';
 import { HintPanel } from '../components/HintPanel';
 import { ErrorBanner } from '../components/ErrorBanner';
 import { PracticeChat } from '../components/PracticeChat';
+import { DictionaryDrawer } from '../components/DictionaryDrawer';
 import { OpeningHint } from '../components/OpeningHint';
 import { EmptyState } from '../components/EmptyState';
 import { HoldToTalk } from '../components/HoldToTalk';
@@ -362,6 +363,8 @@ export function PracticePage({ navigate }: PracticePageProps) {
           </div>
         </div>
       )}
+
+      <DictionaryDrawer />
     </div>
   );
 }

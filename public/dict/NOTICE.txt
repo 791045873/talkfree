@@ -1,0 +1,21 @@
+Dictionary data sources
+=======================
+
+CC-CEDICT (Chinese -> English)
+- Source: https://www.mdbg.net/chinese/dictionary?page=cc-cedict
+- License: Creative Commons Attribution-ShareAlike 4.0 International
+- License URL: https://creativecommons.org/licenses/by-sa/4.0/
+- Entries: 125031
+- Copyright: MDBG and CC-CEDICT contributors
+
+FreeDict eng-zho (English -> Chinese)
+- Source: https://freedict.org/dictionaries/eng-zho/2025.11.23/
+- License: Creative Commons Attribution-ShareAlike 3.0 Unported
+- License URL: https://creativecommons.org/licenses/by-sa/3.0/
+- Headwords: 26660
+- Data from Wiktionary via DBnary, transformed by WikDict/FreeDict.
+- Copyright: FreeDict, WikDict and Wiktionary contributors
+
+This app distributes transformed versions of the dictionaries above.
+If you redistribute the generated data, keep this attribution and the
+same CC BY-SA license for the derived dictionary data.

@@ -1,0 +1,28 @@
+{
+  "version": "2026-11-24",
+  "builtAt": "2026-11-24T14:39:22.410971Z",
+  "counts": {
+    "zhTerms": 198067,
+    "enTerms": 24670,
+    "zhShards": 256,
+    "enShards": 377,
+    "zhBytes": 19201240,
+    "enBytes": 2322171
+  },
+  "sources": {
+    "ccCedict": {
+      "name": "CC-CEDICT",
+      "url": "https://www.mdbg.net/chinese/dictionary?page=cc-cedict",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "entries": 125031
+    },
+    "freeDict": {
+      "name": "FreeDict eng-zho",
+      "url": "https://freedict.org/dictionaries/eng-zho/2025.11.23/",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "entries": 26660
+    }
+  }
+}

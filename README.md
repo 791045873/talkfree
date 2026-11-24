@@ -180,6 +180,33 @@ Authorization: Bearer <你的 Key>
 
 调参入口是 `src/config/hints.ts`（条数、字数上限、是否每轮给）；具体文案规则在 `src/lib/schemas.ts` 的 `GUIDANCE_ON_PROMPT` 与两个话题 prompt 里。
 
+## 英汉词典（右侧抽屉）
+
+练习页右缘有一个竖排「查词」按钮，点开从右侧滑出本地词典抽屉：
+
+- 输入中文单词/词组 → 显示英文释义
+- 输入英文单词/词组 → 显示中文释义
+- 英文词条显示 IPA 音标，中文词条不显示拼音
+- 点击喇叭用浏览器自带 `SpeechSynthesis` 发音，不请求 MiMo TTS、不计费
+- 不调用 LLM，不需要 API Key，查词不产生 token 费用
+
+数据来源：
+
+| 方向 | 词库 | 许可证 |
+| --- | --- | --- |
+| 中 → 英 | CC-CEDICT | CC BY-SA 4.0 |
+| 英 → 中 | FreeDict `eng-zho` | CC BY-SA 3.0 |
+
+实现方式：
+
+- 构建脚本 `scripts/build_dictionary.py` 把两本词典转换成静态分片：
+  - 中文按首字 Unicode 码点 `% 256` 分成 256 个分片
+  - 英文按前两个字母/数字分片
+- 查询时只加载命中的一个分片，约几十 KB；分片在模块内缓存，重复查同一个词不再请求。
+- 词条数据在 `public/dict/`，由 `npm run build:dict` 生成；来源、版本和许可证写在 `manifest.json` / `NOTICE.txt`。
+- 发音只用系统语音包，质量取决于设备；不支持 `SpeechSynthesis` 的浏览器会显示提示，但不影响查词。
+- 查词独立于对话：不读写 `sessions`，不进入当前话题上下文，也不影响正在进行的练习。
+
 ## 数据存储
 
 IndexedDB 数据库名：`spoken-english`（Dexie，定义在 `src/lib/db.ts`）。
@@ -219,6 +246,7 @@ localStorage 只存设置：API Key、音色、主题、自动播放。
    │  ├─ ConfirmDialog.tsx
    │  ├─ CorrectionList.tsx
    │  ├─ CorrectionsPanel.tsx # 默认收起的纠错展开面板
+   │  ├─ DictionaryDrawer.tsx # 右侧竖排入口 + 本地英汉词典抽屉
    │  ├─ EmptyState.tsx
    │  ├─ ErrorBanner.tsx
    │  ├─ ErrorBoundary.tsx
@@ -242,6 +270,7 @@ localStorage 只存设置：API Key、音色、主题、自动播放。
    ├─ hooks/
    │  ├─ useHashRoute.ts       # #/today | #/practice | #/history | #/settings
    │  ├─ usePractice.tsx       # App 级练习流程（切换页面不中断 ASR/LLM）
+   │  ├─ usePronunciation.ts   # 浏览器语音合成（词典发音）
    │  ├─ useRecorder.ts        # MediaRecorder + 权限 + 计时 + 自动停止
    │  ├─ useSettings.tsx       # 设置 Context + 主题应用
    │  ├─ useStickyBleed.ts     # 固定头部/底栏滚动淡出效果
@@ -250,6 +279,7 @@ localStorage 只存设置：API Key、音色、主题、自动播放。
    │  ├─ api.ts                # ASR / LLM / TTS 封装、错误映射、JSON 宽松解析
    │  ├─ audio.ts              # 转 16k 单声道 WAV、base64、MIME 选择
    │  ├─ db.ts                 # Dexie schema 与读写封装
+   │  ├─ dictionary.ts         # 本地词典分片加载 / 中英方向判断 / 查询
    │  ├─ pricing.ts            # 官方价格表与费用估算
    │  ├─ schemas.ts            # 纠错 / 话题提示词与 JSON schema
    │  ├─ settings.ts           # localStorage 设置 + 主题
@@ -262,6 +292,8 @@ localStorage 只存设置：API Key、音色、主题、自动播放。
       ├─ HistoryPage.tsx
       └─ SettingsPage.tsx
 ```
+
+`public/dict/` 是词典构建产物；`scripts/build_dictionary.py` 负责从 CC-CEDICT 和 FreeDict 生成分片。
 
 ---
 
